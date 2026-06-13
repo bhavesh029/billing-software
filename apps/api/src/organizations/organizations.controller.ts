@@ -7,6 +7,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { OrgMemberGuard } from '../auth/org-member.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -16,6 +17,8 @@ import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { SignedLogoUploadDto } from './dto/signed-logo.dto';
 
+@ApiTags('Organizations')
+@ApiBearerAuth('JWT-auth')
 @Controller('organizations')
 @UseGuards(JwtAuthGuard)
 export class OrganizationsController {

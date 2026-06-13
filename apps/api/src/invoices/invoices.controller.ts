@@ -7,6 +7,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { OrgMemberGuard } from '../auth/org-member.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -15,6 +16,8 @@ import { InvoicesService } from './invoices.service';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 
+@ApiTags('Invoices')
+@ApiBearerAuth('JWT-auth')
 @Controller('organizations/:orgId/invoices')
 @UseGuards(JwtAuthGuard, OrgMemberGuard)
 export class InvoicesController {
