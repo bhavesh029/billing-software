@@ -51,13 +51,16 @@ body {
   width: 8px;
   height: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.2);
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
@@ -74,7 +77,10 @@ a:hover {
 }
 
 /* Typography styling */
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-weight: 700;
   letter-spacing: -0.025em;
   color: #fff;
@@ -256,7 +262,7 @@ button:disabled {
   align-items: center;
 }
 
-.row > * {
+.row>* {
   flex: 1 1 200px;
 }
 
@@ -276,6 +282,7 @@ button:disabled {
   .grid-2col {
     grid-template-columns: 1.5fr 1fr;
   }
+
   .grid-3col {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -555,6 +562,7 @@ button:disabled {
     opacity: 0;
     transform: translateY(8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -567,15 +575,90 @@ button:disabled {
     size: A4;
     margin: 10mm;
   }
+
   body {
     background: #fff !important;
     color: #000 !important;
   }
+
   .no-print {
     display: none !important;
   }
+
   .print-root {
     max-width: none !important;
     padding: 0 !important;
   }
+}
+
+/* Mobile viewport adjustments */
+@media (max-width: 600px) {
+  .nav {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  .nav-links {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .nav-logo {
+    justify-content: center;
+  }
+
+  .shell {
+    padding: 0.75rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    line-height: 2.15rem;
+  }
+
+  .hero-card {
+    padding: 1.25rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+    text-align: center;
+  }
+
+  .hero-card p {
+    max-width: 100% !important;
+  }
+
+  .hero-card button {
+    width: 100%;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+
+  .tab-container {
+    gap: 0.75rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 0.25rem;
+  }
+
+  .tab-btn {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Table inputs sizing on mobile screens */
+.table-custom input,
+.table-custom select {
+  min-width: 90px;
+}
+
+.table-custom td:first-child input {
+  min-width: 180px;
+  /* Description needs more horizontal space */
 }
