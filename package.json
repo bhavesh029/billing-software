@@ -1,0 +1,23 @@
+{
+  "name": "billing-software",
+  "private": true,
+  "packageManager": "npm@10.9.2",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "db:generate": "npm run db:generate -w @billing/api",
+    "db:migrate": "npm run db:migrate -w @billing/api",
+    "db:push": "npm run db:push -w @billing/api",
+    "db:deploy": "npm run db:deploy -w @billing/api"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

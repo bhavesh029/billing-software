@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrgRole {
+  OWNER
+  MEMBER
+}
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+}
+
+enum DocumentType {
+  BILL_OF_SUPPLY
+  TAX_INVOICE
+}
+
+model Organization {
+  id                  String   @id @default(cuid())
+  legalName           String
+  tradeName           String?
+  address             String
+  phone               String?
+  email               String?
+  logoUrl             String?
+  bankName            String?
+  accountHolderName   String?
+  termsTemplate       String?
+  signatureLabel      String?
+  invoicePrefix       String   @default("")
+  gstinEncrypted      String?
+  bankAccountEncrypted String?
+  ifscEncrypted       String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  members  OrganizationMember[]
+  invoices Invoice[]
+  sequence InvoiceSequence?
+  parties  Party[]
+}
+
+model OrganizationMember {
+  id             String       @id @default(cuid())
+  organizationId String
+  userId         String
+  role           OrgRole      @default(MEMBER)
+  createdAt      DateTime     @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@index([userId])
+}
+
+model InvoiceSequence {
+  organizationId String @id
+  lastNumber     Int    @default(0)
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+model Party {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  address        String
+  stateCode      String
+  stateName      String
+  gstin          String?
+  phone          String?
+  email          String?
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  invoices     Invoice[]
+
+  @@index([organizationId])
+}
+
+model Invoice {
+  id                       String         @id @default(cuid())
+  organizationId         String
+  partyId                 String?
+  invoiceNumber          Int?
+  issueDate               DateTime
+  placeOfSupplyStateCode  String
+  placeOfSupplyStateName  String
+  documentType            DocumentType   @default(BILL_OF_SUPPLY)
+  buyerName               String
+  buyerAddress            String
+  buyerStateCode          String
+  buyerStateName          String
+  sellerSnapshot          Json
+  status                  InvoiceStatus  @default(DRAFT)
+  subtotal                Decimal        @db.Decimal(18, 2)
+  totalTax                Decimal        @db.Decimal(18, 2)
+  grandTotal              Decimal        @db.Decimal(18, 2)
+  amountInWords           String
+  receivedAmount          Decimal?       @db.Decimal(18, 2)
+  balance                 Decimal?       @db.Decimal(18, 2)
+  previousBalance         Decimal?       @db.Decimal(18, 2)
+  currentBalance          Decimal?       @db.Decimal(18, 2)
+  createdByUserId         String
+  createdAt               DateTime       @default(now())
+  updatedAt               DateTime       @updatedAt
+
+  organization Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  party        Party?            @relation(fields: [partyId], references: [id], onDelete: SetNull)
+  lineItems    InvoiceLineItem[]
+
+  @@index([organizationId, status])
+  @@index([partyId])
+}
+
+model InvoiceLineItem {
+  id              String   @id @default(cuid())
+  invoiceId       String
+  lineOrder       Int
+  description     String
+  hsnSac          String?
+  quantity        Decimal  @db.Decimal(18, 4)
+  unit            String
+  unitPrice       Decimal  @db.Decimal(18, 2)
+  gstRatePercent  Decimal  @db.Decimal(5, 2)
+  cgstAmount      Decimal  @db.Decimal(18, 2)
+  sgstAmount      Decimal  @db.Decimal(18, 2)
+  igstAmount      Decimal  @db.Decimal(18, 2)
+  lineTotal       Decimal  @db.Decimal(18, 2)
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+}

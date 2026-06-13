@@ -1,0 +1,9 @@
+{
+  "name": "Billing",
+  "short_name": "Billing",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f1419",
+  "theme_color": "#3b82f6",
+  "icons": []
+}
